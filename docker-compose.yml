@@ -1,13 +1,16 @@
 
 services:
   minio:
-    image: minio/minio
+    image: minio/minio:latest
     ports:
-      - "9000:9000"
+      - "9000:9000"      # API
+      - "9001:9001"      # Console UI
     environment:
-      - MINIO_ACCESS_KEY=minioadmin
-      - MINIO_SECRET_KEY=minioadmin
-    command: server /data
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
 
   jupyter:
     image: jupyter/pyspark-notebook:python-3.11
@@ -15,7 +18,7 @@ services:
       - "8888:8888"
       - "4050:4050"
     environment:
-      JUPYTER_PASSWORD: password
+      JUPYTER_TOKEN: "mysecrettoken"
     volumes:
      - ./dados:/home/jovyan/work/dados
      - ./exemplos:/home/jovyan/work/exemplos
@@ -23,3 +26,5 @@ services:
     depends_on:
       - minio
 
+volumes:
+  minio_data:
