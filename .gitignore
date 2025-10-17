@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *.so
 .Python
+.venv/
+venv/
+env/
 
 # Spark
 metastore_db/
